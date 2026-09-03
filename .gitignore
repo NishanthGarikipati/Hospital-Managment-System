@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+*.log
+
+# SQLite database files (regenerated + seeded on startup)
+server/data/
+*.db
+*.db-shm
+*.db-wal
+
+.DS_Store
+.env
+.env.local

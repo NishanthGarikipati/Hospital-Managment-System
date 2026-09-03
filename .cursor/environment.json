@@ -1,0 +1,18 @@
+{
+  "name": "Hospital Management System",
+  "install": "npm ci || npm install",
+  "terminals": [
+    {
+      "name": "api-server",
+      "command": "npm run dev:server"
+    },
+    {
+      "name": "web-client",
+      "command": "npm run dev:client"
+    }
+  ],
+  "ports": [
+    { "name": "API", "port": 4000 },
+    { "name": "Web", "port": 5173 }
+  ]
+}
