@@ -1,6 +1,11 @@
 import express, { type Request, type Response, type NextFunction } from "express";
 import cors from "cors";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { existsSync } from "node:fs";
 import { db, initSchema, seed } from "./db.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 initSchema();
 seed();
@@ -243,6 +248,21 @@ app.delete(
   })
 );
 
+// Serve the built front end (client/dist) so the whole app runs on one port.
+// Resolves the same from server/src (tsx dev) and server/dist (compiled) to <root>/client/dist.
+const clientDist = join(__dirname, "..", "..", "client", "dist");
+const clientIndex = join(clientDist, "index.html");
+const servesClient = existsSync(clientIndex);
+
+if (servesClient) {
+  app.use(express.static(clientDist));
+  // SPA fallback: send index.html for non-API GET requests (client-side routing).
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.method !== "GET" || req.path.startsWith("/api")) return next();
+    res.sendFile(clientIndex);
+  });
+}
+
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
   res.status(500).json({ error: "internal server error" });
@@ -250,4 +270,9 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 
 app.listen(PORT, () => {
   console.log(`Hospital API listening on http://localhost:${PORT}`);
+  if (servesClient) {
+    console.log(`Serving built client from ${clientDist}`);
+  } else {
+    console.log("Client build not found; run `npm run build` to serve the UI from this port.");
+  }
 });

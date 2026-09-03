@@ -59,6 +59,21 @@ npm run dev:client
 Open http://localhost:5173 in your browser. The Vite dev server proxies
 `/api/*` requests to the backend on port 4000.
 
+### Single-port production run
+
+For a production-style run served entirely from **one port** (no proxy, no
+second server), build the app and start the API server — it also serves the
+built front end and handles client-side routes:
+
+```bash
+npm run serve   # builds client + server, then serves everything on port 4000
+```
+
+Then open http://localhost:4000. Under the hood this runs `npm run build`
+followed by `npm start` (which is `node server/dist/index.js`). The server
+serves `client/dist` as static files with an SPA fallback, so deep links like
+`/patients` work on reload.
+
 ## Useful scripts
 
 | Command                | Description                                              |
@@ -66,6 +81,8 @@ Open http://localhost:5173 in your browser. The Vite dev server proxies
 | `npm run dev:server`   | Start the API with hot reload (`tsx watch`).             |
 | `npm run dev:client`   | Start the Vite dev server for the front end.             |
 | `npm run build`        | Type-check/build the server (`tsc`) and client (`vite`). |
+| `npm start`            | Serve the built app (API + UI) on a single port (4000).  |
+| `npm run serve`        | `build` then `start` — one command single-port run.      |
 | `npm run seed`         | Reset and re-seed the SQLite database with demo data.    |
 | `npm run test:api`     | Run the end-to-end API smoke test (server must be up).   |
 
