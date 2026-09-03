@@ -1,0 +1,17 @@
+{
+  "name": "hospital-management-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A full-stack Hospital Management System (patients, doctors, appointments).",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev --workspace server",
+    "dev:client": "npm run dev --workspace client",
+    "build": "npm run build --workspace server && npm run build --workspace client",
+    "seed": "npm run seed --workspace server",
+    "test:api": "node scripts/smoke-test.mjs"
+  }
+}
